@@ -339,7 +339,7 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
         },
         Style::default().add_modifier(Modifier::ITALIC),
     )))
-    .style(Style::default().bg(Color::Black).fg(Color::Green))
+    .style(Style::default().bg(Color::Black).fg(Color::White))
     .block(block)
     .alignment(Alignment::Center);
 
