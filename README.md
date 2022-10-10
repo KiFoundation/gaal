@@ -2,7 +2,7 @@
 
 ![](resources/gaal.gif)
 
-Gall is a Cosmwasm contract state watcher.
+Gaal is a Cosmwasm contract state watcher.
 
 It now support these blockchains :
 * KiChain
