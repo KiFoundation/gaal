@@ -55,3 +55,20 @@ For debugging you can dump log to the standard output like this :
 ```bash
 shell $ RUST_LOG=debug gaal ki1ltd0maxmte3xf4zshta9j5djrq9cl692ctsp9u5q0p9wss0f5lmsc8qwrc
 ```
+
+
+## Credits
+
+This project was built and is maintained by:
+
+* [SylvestreG](https://github.com/SylvestreG)
+
+
+## Contributing
+
+Contributions are welcome! Leave an issue on Github, or create a Pull Request.
+
+
+## License
+
+This project is licensed under the [MIT license](https://opensource.org/licenses/MIT).
