@@ -37,7 +37,7 @@ shell $ cargo install --path .
 Simply give the contract address you want to watch to Gaal :
 
 ```bash
-bash $ gaal stars1m8hp3rw4tkhp4ns3xw2w2rcpuml7thqlmzdnnz4qrkejxxa2amnq99g
+bash $ gaal stars1m8hp3rw4tkhp4ns3xw2w2rcpuml7thqlmzdnnz4qrkejxxa2amnq99g0nc
 ```
 
 
