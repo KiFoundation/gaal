@@ -53,7 +53,11 @@ fn main() -> Result<(), anyhow::Error> {
 
     let address = &args[1];
 
-    let lcd = Lcd::new(find_chain_by_prefix(address.clone())?)?;
+    let lcd = Lcd::new(if let Ok(lcd) = std::env::var("OVERLOAD_LCD") {
+        lcd
+    } else {
+        find_chain_by_prefix(address.clone())?
+    })?;
     let cosmos = Cosmos::new(&lcd);
     let contract = Contract::new(cosmos, address.clone())?;
 
