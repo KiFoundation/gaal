@@ -1,7 +1,7 @@
 use anyhow::bail;
 
 use crossterm::{
-    event::{self, DisableMouseCapture, EnableMouseCapture, Event, KeyCode},
+    event::{self, EnableMouseCapture, Event, KeyCode},
     execute,
     terminal::{disable_raw_mode, enable_raw_mode, EnterAlternateScreen, LeaveAlternateScreen},
 };
@@ -9,6 +9,7 @@ use std::{
     env, io,
     time::{Duration, Instant},
 };
+use crossterm::event::EnableFocusChange;
 use synnax::cosmos::Cosmos;
 use synnax::lcd::Lcd;
 use synnax::query::contract::{Contract, ItemOrMap};
@@ -18,7 +19,7 @@ use tui::{
     backend::{Backend, CrosstermBackend},
     layout::{Constraint, Direction, Layout},
     style::{Color, Modifier, Style},
-    text::{Span, Spans},
+    text::Spans,
     widgets::{Block, Borders, List, ListItem, ListState},
     Frame, Terminal,
 };
@@ -78,7 +79,8 @@ fn main() -> Result<(), anyhow::Error> {
     execute!(
         terminal.backend_mut(),
         LeaveAlternateScreen,
-        DisableMouseCapture
+        EnableMouseCapture,
+        EnableFocusChange
     )?;
     terminal.show_cursor()?;
 
@@ -259,11 +261,11 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     // Create two chunks with equal horizontal screen space
     let global_panel = Layout::default()
         .direction(Direction::Horizontal)
-        .constraints([Constraint::Percentage(50), Constraint::Percentage(50)].as_ref())
+        .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(f.size());
     let chunks2 = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([Constraint::Percentage(80), Constraint::Percentage(20)].as_ref())
+        .constraints([Constraint::Percentage(30), Constraint::Percentage(70)].as_ref())
         .split(global_panel[1]);
 
     // Iterate through all elements in the `items` app and append some debug text to it.
@@ -320,32 +322,28 @@ fn ui<B: Backend>(f: &mut Frame<B>, app: &mut App) {
     f.render_stateful_widget(second_key, chunks2[0], &mut app.items.second_state);
 
     let block = Block::default().borders(Borders::ALL).title("State Value");
-    let paragraph = Paragraph::new(Spans::from(Span::styled(
-        match app.items.state.selected() {
-            None => "NO KEY SELECTED",
-            Some(idx) => {
-                let value = app
-                    .contract
-                    .state
-                    .get(app.items.items[idx].as_str())
-                    .unwrap();
+    let paragraph = Paragraph::new(match app.items.state.selected() {
+        None => "NO KEY SELECTED",
+        Some(idx) => {
+            let value = app
+                .contract
+                .state
+                .get(app.items.items[idx].as_str())
+                .unwrap();
 
-                match value {
-                    ItemOrMap::Item { value } => value.as_str(),
-                    ItemOrMap::Map { map } => map
-                        .get(
-                            app.items.second_items[app.items.second_state.selected().unwrap()]
-                                .as_str(),
-                        )
-                        .unwrap(),
-                }
+            match value {
+                ItemOrMap::Item { value } => value.as_str(),
+                ItemOrMap::Map { map } => map
+                    .get(
+                        app.items.second_items[app.items.second_state.selected().unwrap()].as_str(),
+                    )
+                    .unwrap(),
             }
-        },
-        Style::default().add_modifier(Modifier::ITALIC),
-    )))
+        }
+    })
     .style(Style::default().bg(Color::Black).fg(Color::White))
     .block(block)
-    .alignment(Alignment::Center);
+    .alignment(Alignment::Left);
 
     f.render_widget(paragraph, chunks2[1]);
 }
